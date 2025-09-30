@@ -1,0 +1,15 @@
+FROM ghcr.io/brobridgeorg/atomic:v0.0.5-20240828-ubi
+
+#ARG ATOMIC_FLOW=http://gitea.lab-gitea/demo/demo00.git
+
+WORKDIR /atomic
+USER root
+RUN rm -rf /data && mkdir /data && chgrp -R 0 /data && chmod g=u /data
+COPY ./atomic/* /atomic/
+RUN chgrp -R 0 /atomic &&\
+	chmod -R 2777 /atomic
+ 
+USER 1001
+EXPOSE 1880
+
+ENTRYPOINT [ "sh", "/atomic/startup.sh" ]

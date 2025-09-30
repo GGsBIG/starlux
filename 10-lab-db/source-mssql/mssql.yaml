@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-source-volume1
+  namespace: gravity2-lab
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  #storageClassName: standard
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: source-mssql
+  namespace: gravity2-lab
+  labels:
+    app: gravity
+spec:
+  ports:
+    - port: 1433
+      name: tcp
+      protocol: TCP
+      nodePort: 31443
+  selector:
+    name: source-mssql
+  #type: LoadBalancer
+  #loadBalancerIP: 172.18.17.157
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source-mssql
+  namespace: gravity2-lab
+  labels:
+    name: source-mssql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: source-mssql
+  template:
+    metadata:
+      labels:
+        name: source-mssql
+    spec:
+      hostname: source-mssql
+      securityContext: {}
+      containers:
+        - image: mcr.microsoft.com/mssql/server:2019-CU28-ubuntu-20.04
+        #- image: mcr.microsoft.com/mssql/server:2017-CU17-ubuntu
+          name: source-mssql
+          env:
+            - name: "ACCEPT_EULA"
+              value: "Y"
+            - name: "SA_PASSWORD"
+              value: "1qaz@WSX"
+            - name: "MSSQL_AGENT_ENABLED"
+              value: "true"
+            - name: "MSSQL_COLLATION"
+              value: "Chinese_Taiwan_Stroke_CI_AS"
+          volumeMounts:
+          - mountPath: /var/opt/mssql
+            name: data-store
+          ports:
+            - containerPort: 1433
+              name: tcp
+      volumes:
+      - name: data-store
+        persistentVolumeClaim:
+          claimName: mssql-source-volume1

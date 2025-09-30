@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: target2-mysql-volume 
+  namespace: gravity2-lab
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  #storageClassName: standard
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: target2-mysql
+  namespace: gravity2-lab
+  labels:
+    app: gravity
+spec:
+  ports:
+    - port: 3306
+      name: tcp
+      protocol: TCP
+      nodePort: 30306
+  selector:
+    name: target2-mysql
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: target2-mysql
+  namespace: gravity2-lab
+  labels:
+    name: target2-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: target2-mysql
+  template:
+    metadata:
+      labels:
+        name: target2-mysql
+    spec:
+      hostname: target2-mysql
+      securityContext: {}
+      containers:
+        - image: mysql:8.0.39-bookworm
+          name: target-mysql
+          env:
+            - name: "MYSQL_DATABASE"
+              value: "testdb"
+            - name: "MYSQL_USER"
+              value: "mysql"
+            - name: "MYSQL_PASSWORD"
+              value: "1qaz@WSX"
+            - name: "MYSQL_ROOT_PASSWORD"
+              value: "1qaz@WSXROOT"
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: data-store
+          ports:
+            - containerPort: 3306
+              name: tcp
+      volumes:
+      - name: data-store
+        persistentVolumeClaim:
+          claimName: target2-mysql-volume
