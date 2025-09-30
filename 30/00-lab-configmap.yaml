@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: labcm
+  namespace: gravity2-lab
+data:
+  TZ: Asia/Taipei
+  SOURCE_DATABASE_NAME: source-mssql
+  SOURCE_DATABASE_HOST: source-mssql
+  SOURCE_DATABASE_PORT: "1433"
+  SOURCE_DB_MSSQL_DB_NAME: TestDB
+  SOURCE_DB_MSSQL_TB1_NAME: mi_source
+  SOURCE_DATABASE_USER: SA
+  TARGET_DB_MYSQL_NAME: target2-mysql
+  TARGET_DB_MYSQL_HOST: target2-mysql
+  TARGET_DB_MYSQL_PORT: "3306"
+  TARGET_DB_MYSQL_DB_NAME: testdb
+  TARGET_DB_MYSQL_TB1_NAME: target_id13
+  TARGET_DB_MYSQL_USER: mysql
+  GIT_BRANCH: main
+  GIT_REPO_URL: admin/atomic.git
+  GIT_TOKEN: 5a0e4b0b10ea04c355c242a28f563a5028bfa5d7
+  GIT_URL: gitea:3000
+  GIT_USER: admin

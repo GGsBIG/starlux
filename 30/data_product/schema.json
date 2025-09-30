@@ -1,0 +1,10 @@
+{
+  "gravity_pk": {"type": "string"},
+  "bdl_id": { "type": "string" },
+  "bdl_pat_no": { "type": "uint" },
+  "bdl_ipd_no": { "type": "string" },
+  "bdl_in_dtti": { "type": "string" },
+  "bdl_in_dtti_v": { "type": "string" },
+  "bdl_chg_bed": { "type": "string" },
+  "bdl_group": { "type": "string" }
+}
