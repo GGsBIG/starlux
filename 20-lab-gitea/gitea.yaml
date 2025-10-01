@@ -25,10 +25,8 @@ spec:
         - containerPort: 22
           name: git-ssh
         volumeMounts:
-        - mountPath: /var/lib/gitea
+        - mountPath: /data
           name: git-volume
-        - mountPath: /etc/gitea
-          name: git-volume1
       volumes:
       - name: git-volume
         persistentVolumeClaim:
@@ -48,8 +46,8 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  #storageClassName: standard
+      storage: 5Gi
+  storageClassName: nfs-storage
 
 ---
 apiVersion: v1
